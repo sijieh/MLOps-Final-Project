@@ -1,0 +1,8 @@
+{
+  "best_model_id": "StackedEnsemble_AllModels_3_AutoML_1_20250811_192903",
+  "run_id": "05dc3ac8456d45f3b20c79c99922c1b4",
+  "metrics": {
+    "accuracy": 0.6836813611755607,
+    "f1_weighted": 0.6779604437241201
+  }
+}

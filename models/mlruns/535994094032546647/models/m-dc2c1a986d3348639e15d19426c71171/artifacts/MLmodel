@@ -1,0 +1,20 @@
+artifact_path: /Users/yijiasong/MLOps-Final-Project/models/mlruns/535994094032546647/models/m-dc2c1a986d3348639e15d19426c71171/artifacts
+flavors:
+  h2o:
+    code: null
+    data: model.h2o
+    h2o_version: 3.46.0.7
+  python_function:
+    data: model.h2o
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.h2o
+    python_version: 3.12.3
+mlflow_version: 3.2.0
+model_id: m-dc2c1a986d3348639e15d19426c71171
+model_size_bytes: 43495187
+model_uuid: m-dc2c1a986d3348639e15d19426c71171
+prompts: null
+run_id: 05dc3ac8456d45f3b20c79c99922c1b4
+utc_time_created: '2025-08-12 00:31:07.620017'

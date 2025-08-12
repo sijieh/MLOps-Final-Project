@@ -1,0 +1,14 @@
+artifact_uri: /Users/yijiasong/MLOps-Final-Project/models/mlruns/535994094032546647/05dc3ac8456d45f3b20c79c99922c1b4/artifacts
+end_time: 1754958669715
+entry_point_name: ''
+experiment_id: '535994094032546647'
+lifecycle_stage: active
+run_id: 05dc3ac8456d45f3b20c79c99922c1b4
+run_name: youthful-ox-648
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754958543446
+status: 3
+tags: []
+user_id: yijiasong
