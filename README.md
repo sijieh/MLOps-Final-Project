@@ -49,7 +49,7 @@ make infer
 - Outputs:
   - artifacts/preds.json
   - artifacts/metrics.json
-  - 
+
 3. Generate Baseline Monitoring Report
 ```bash
 make monitor
