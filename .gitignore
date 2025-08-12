@@ -3,16 +3,17 @@
 venv/
 env/
 
-# python cache
+# python cache & notebooks
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# local artifacts / big files
+# local artifacts / runs / reports
 artifacts/
 mlruns/
 models/mlruns/
-models/*/
-*.jar
+*.html
 *.log
+
+# OS junk
 .DS_Store
