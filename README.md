@@ -32,7 +32,7 @@ make serve
 
 
 ### Usage
-**Note:** Open a new Terminal window, keep the old window (service) running
+**Note:** Open a new Terminal window, keep the old window (service) running, repeat Setup step 2-3 (cd to root file & Create Virtual Environment)
 1. Train the Model
 ```bash
 make train
