@@ -1,0 +1,18 @@
+# virtual envs
+.venv/
+venv/
+env/
+
+# python cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# local artifacts / big files
+artifacts/
+mlruns/
+models/mlruns/
+models/*/
+*.jar
+*.log
+.DS_Store
