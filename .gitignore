@@ -17,3 +17,4 @@ models/mlruns/
 
 # OS junk
 .DS_Store
+.venv/
