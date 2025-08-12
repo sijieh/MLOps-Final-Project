@@ -9,12 +9,10 @@ __pycache__/
 .ipynb_checkpoints/
 
 # local artifacts / runs / reports
-artifacts/
-mlruns/
-models/mlruns/
 *.html
 *.log
 
 # OS junk
 .DS_Store
 .venv/
+mlruns/
