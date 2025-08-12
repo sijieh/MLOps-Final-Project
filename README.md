@@ -71,7 +71,7 @@ make perturb
   - artifacts/drift-after.html
   - artifacts/perturb_test_results.json
 
-**Note:** Due to file size limitations, HTML reports need to be downloaded and opened locally in your browser.
+**Note:** Due to file size limitations, HTML reports need to be opened locally (the HTML reports are located inside **artifacts/**)
 
 
 ### Results
