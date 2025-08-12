@@ -10,37 +10,69 @@
 
 ### Setup
 
+1. Clone & Navigate
 ```bash
-pip install h2o evidently pandas scikit-learn numpy
+git clone https://github.com/yijiasong1002-uchi/MLOps-Final-Project.git
+cd MLOps-Final-Project
 ```
+2. Create Virtual Environment (Recommended)
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+4. Start MLflow Model Serving (Required)
+```bash
+make serve
+```
+**Note:** Ensure the service keeps running for the whole process
+
 
 ### Usage
-
-#### 1. Generate Baseline Report
-
+**Note:** Open a new Terminal window, keep the old window (service) running
+1. Train the Model
 ```bash
-python monitor.py
+make train
 ```
 
-This creates a baseline monitoring report using the original dataset as both reference and current data.
+The trained model will be stored in the models/mlruns/ directory.
 
-**Output:**
-- `baseline.html` - Evidently monitoring report
-- `baseline_metrics.json` - Performance metrics
+2. Batch Inference
+```bash
+make infer
+```
+- Reads artifacts/test.csv
+- Sends it to the MLflow model for predictions
+- Outputs:
+  - artifacts/preds.json
+  - artifacts/metrics.json
+  - 
+3. Generate Baseline Monitoring Report
+```bash
+make monitor
+```
+- Uses the original dataset as both reference and current data
+- Outputs:
+  - artifacts/baseline.html
+  - artifacts/baseline_metrics.json
+
+4. Simulate Data Drift & Test
+```bash
+make perturb
+```
+- Artificially modifies:
+  - alcohol → -1.2
+  - volatile acidity → +0.1
+- Detects performance degradation after drift
+- Outputs:
+  - artifacts/drift-after.html
+  - artifacts/perturb_test_results.json
 
 **Note:** Due to file size limitations, HTML reports need to be downloaded and opened locally in your browser.
 
-#### 2. Test Data Drift
-
-```bash
-python perturb_test.py
-```
-
-This simulates data drift by modifying alcohol (-1.2) and volatile acidity (+0.1) features, then generates a drift detection report.
-
-**Output:**
-- `drift-after.html` - Drift detection report
-- `perturb_test_results.json` - Complete comparison results
 
 ### Results
 
