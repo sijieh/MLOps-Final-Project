@@ -98,8 +98,8 @@ The monitoring system successfully detects significant performance degradation:
 
 ## How to View HTML Reports
 
-### Method 1: Download and Open Locally
-1. Download the HTML files from the repository
+### Method 1: Open Locally
+1. After running all stpes above, the HTML files shoud be successfully locate within **artifacts/**
 2. Open them in your web browser locally
 
 ### Method 2: GitHub Pages (Recommended)
