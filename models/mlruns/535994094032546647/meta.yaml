@@ -1,0 +1,6 @@
+artifact_location: /Users/yijiasong/MLOps-Final-Project/models/mlruns/535994094032546647
+creation_time: 1754956576042
+experiment_id: '535994094032546647'
+last_update_time: 1754956576042
+lifecycle_stage: active
+name: wine-quality-automl
