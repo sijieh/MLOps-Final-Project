@@ -60,23 +60,27 @@ This project implements an end-to-end MLOps pipeline for wine quality prediction
   - Shared models/ & artifacts/ via Docker volumes
 
 ### 1. Docker Setup (Recommended)
-1. Build all services
+1. Clone & Navigate
+```bash
+git clone https://github.com/yijiasong1002-uchi/MLOps-Final-Project.git
+cd MLOps-Final-Project
+```
+2. Build all services
 ```bash
 docker compose build --no-cache
 ```
-
-2. Train model inside Docker
+3. Train model inside Docker
 ```bash
 make train-docker
 ```
 **Note:** This will save the model into models/mlruns and models/h2o_model_info.json
 
-3. Start Model Serving + Streamlit UI
+4. Start Model Serving + Streamlit UI
 ```bash
 docker compose up -d model-serving streamlit
 ```
 
-4. Access
+5. Access
 - UI: http://localhost:8501
 - API: http://localhost:5001
 
