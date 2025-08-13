@@ -1,14 +1,86 @@
 # MLOps-Final-Project
 
-## ML Monitoring with Evidently
+## Project Overview
+This project implements an end-to-end MLOps pipeline for wine quality prediction, including:
+- Data ingestion & preprocessing
+- Model training with H2O AutoML
+- Model serving with MLflow
+- Monitoring with Evidently AI
+- Drift simulation & performance degradation testing
+- Local & Dockerized deployment with Streamlit UI
 
-### Files
+## Tech Stack
+- Modeling: H2O AutoML
+- Serving: MLflow pyfunc
+- Monitoring: Evidently AI
+- UI: Streamlit
+- Deployment: Docker Compose
+- Orchestration: Makefile
 
-- `monitor.py` - Baseline monitoring script
-- `perturb_test.py` - Data drift simulation and testing
-- `requirements.txt` - Required dependencies
+## Technical Architecture
+1. Data Source
+- Dataset: Wine Quality Dataset (red & white wines) with 11 physicochemical features + wine type + quality score
+- Target variable: quality (integer score)
+- Features:
+  - Numerical: fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates, alcohol
+  - Categorical: wine type (red/white)
 
-### Setup
+2. Model Training
+- Framework: H2O AutoML
+- Steps:
+  1. Train/test split
+  2. Launch AutoML search for best model
+  3. Save best model in MLflow format
+  4. Store model metadata (h2o_model_info.json)
+     
+3. Model Serving
+- MLflow pyfunc server runs inside Docker (model-serving service)
+- REST API Endpoints:
+  - /invocations → batch prediction (POST JSON or CSV)
+  - /ping → health check
+
+4. Monitoring
+- Evidently tracks:
+  - Data drift
+  - Target drift
+  - Data quality metrics
+  - Classification performance metrics (accuracy, F1)
+- Baseline monitoring:
+  - Reference data: training set
+  - Current data: test set
+- Drift simulation:
+  - Perturb ≥ 2 features (alcohol -1.2, volatile acidity +0.1)
+  - Re-run monitoring to detect performance drop
+
+5. Deployment
+- Local mode: Python virtualenv + Makefile commands
+- Docker mode: Multi-service docker-compose setup
+  - model-serving → MLflow server
+  - streamlit → UI for predictions, batch uploads, drift tests
+  - Shared models/ & artifacts/ via Docker volumes
+
+### 1. Docker Setup (Recommended)
+1. Build all services
+```bash
+docker compose build --no-cache
+```
+
+2. Train model inside Docker
+```bash
+make train-docker
+```
+**Note:** This will save the model into models/mlruns and models/h2o_model_info.json
+
+3. Start Model Serving + Streamlit UI
+```bash
+docker compose up -d model-serving streamlit
+```
+
+4. Access
+- UI: http://localhost:8501
+- API: http://localhost:5001
+
+### 2. Local Setup (No Docker)
 
 1. Clone & Navigate
 ```bash
@@ -30,17 +102,15 @@ make serve
 ```
 **Note:** Ensure the service keeps running for the whole process
 
-
 ### Usage
+5. Train the Model
 **Note:** Open a new Terminal window, keep the old window (service) running, repeat Setup step 2-3 (cd to root file & Create Virtual Environment)
-1. Train the Model
 ```bash
 make train
 ```
-
 The trained model will be stored in the models/mlruns/ directory.
 
-2. Batch Inference
+6. Batch Inference
 ```bash
 make infer
 ```
@@ -50,7 +120,7 @@ make infer
   - artifacts/preds.json
   - artifacts/metrics.json
 
-3. Generate Baseline Monitoring Report
+7. Generate Baseline Monitoring Report
 ```bash
 make monitor
 ```
@@ -59,7 +129,7 @@ make monitor
   - artifacts/baseline.html
   - artifacts/baseline_metrics.json
 
-4. Simulate Data Drift & Test
+8. Simulate Data Drift & Test
 ```bash
 make perturb
 ```
@@ -72,29 +142,6 @@ make perturb
   - artifacts/perturb_test_results.json
 
 **Note:** Due to file size limitations, HTML reports need to be opened locally (the HTML reports are located inside **artifacts/**)
-
-
-### Results
-
-The monitoring system successfully detects significant performance degradation:
-
-- **Baseline Accuracy:** 68.40%
-- **After Drift Accuracy:** 49.92%
-- **Performance Drop:** -18.48%
-
-### Technical Details
-
-#### Column Mapping
-- **Numerical features:** 11 physicochemical properties
-- **Categorical features:** Wine type (red/white)
-- **Target:** Quality score
-- **Predictions:** H2O AutoML model outputs
-
-#### Monitoring Metrics
-- Data drift detection
-- Data quality analysis
-- Target drift monitoring
-- Classification performance tracking
 
 ## How to View HTML Reports
 
