@@ -1,0 +1,18 @@
+flavors:
+  h2o:
+    code: null
+    data: model.h2o
+    h2o_version: 3.46.0.7
+  python_function:
+    data: model.h2o
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.h2o
+    python_version: 3.11.13
+mlflow_version: 3.2.0
+model_id: null
+model_size_bytes: 57413687
+model_uuid: 23ef20034a8a42f08eee7cf7338acb41
+prompts: null
+utc_time_created: '2025-08-13 22:31:19.105779'

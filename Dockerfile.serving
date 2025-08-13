@@ -1,0 +1,14 @@
+# MLflow model serving image (includes H2O for the pyfunc)
+FROM python:3.11-slim-bookworm
+
+# Java is needed by h2o
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openjdk-17-jre-headless curl \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+COPY requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# volumes will mount the repo; command is set in docker-compose to read RUN_ID and serve
+EXPOSE 5000

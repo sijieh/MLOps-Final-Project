@@ -77,12 +77,36 @@ def main():
         f1  = f1_score(y_true, preds, average="weighted")
         mlflow.log_metrics({"accuracy": acc, "f1_weighted": f1})
 
-        # log model (MLflow’s H2O flavor)
-        mlflow.h2o.log_model(best, artifact_path="model")
+        # log model (MLflow’s H2O flavor) + local fallback
+        logged_ok = False
+        try:
+            mlflow.h2o.log_model(best, artifact_path="model")
+            logged_ok = True
+            print("[INFO] mlflow.h2o.log_model -> artifacts/model (via tracking store)")
+        except Exception as e:
+            print("[WARN] mlflow.h2o.log_model failed:", repr(e))
+
+        # Always save a local MLflow-model directory as fallback
+        from pathlib import Path
+        local_model_dir = Path("models/exported_model")
+        if local_model_dir.exists():
+            import shutil; shutil.rmtree(local_model_dir)
+        mlflow.h2o.save_model(best, path=str(local_model_dir))
+        print("[INFO] mlflow.h2o.save_model ->", local_model_dir)
+
+        # write run info (include both paths)
+        uri_all   = mlflow.get_artifact_uri()
+        uri_model = mlflow.get_artifact_uri("model")
         info = {
             "best_model_id": best.model_id,
+            "model_id": best.model_id,                              
+            "best_algo": getattr(best, "algo", None) or getattr(best, "algorithm", None), 
             "run_id": run_id,
-            "metrics": {"accuracy": acc, "f1_weighted": f1}
+            "metrics": {"accuracy": acc, "f1_weighted": f1},
+            "artifact_uri": uri_all,
+            "model_artifact_uri": uri_model,
+            "local_model_dir": str(local_model_dir),
+            "logged_to_artifacts": logged_ok
         }
         with open("models/h2o_model_info.json", "w") as f:
             json.dump(info, f, indent=2)

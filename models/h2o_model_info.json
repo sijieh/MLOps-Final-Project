@@ -1,8 +1,14 @@
 {
-  "best_model_id": "StackedEnsemble_AllModels_3_AutoML_1_20250811_192903",
-  "run_id": "05dc3ac8456d45f3b20c79c99922c1b4",
+  "best_model_id": "StackedEnsemble_AllModels_3_AutoML_1_20250813_222911",
+  "model_id": "StackedEnsemble_AllModels_3_AutoML_1_20250813_222911",
+  "best_algo": "stackedensemble",
+  "run_id": "68fb56f6a8934a418b8c5395101f0c14",
   "metrics": {
-    "accuracy": 0.6836813611755607,
-    "f1_weighted": 0.6779604437241201
-  }
+    "accuracy": 0.6844547563805105,
+    "f1_weighted": 0.677573592215787
+  },
+  "artifact_uri": "/Users/yijiasong/MLOps-Final-Project/models/mlruns/535994094032546647/68fb56f6a8934a418b8c5395101f0c14/artifacts",
+  "model_artifact_uri": "/Users/yijiasong/MLOps-Final-Project/models/mlruns/535994094032546647/68fb56f6a8934a418b8c5395101f0c14/artifacts/model",
+  "local_model_dir": "models/exported_model",
+  "logged_to_artifacts": true
 }

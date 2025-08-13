@@ -80,16 +80,26 @@ def main():
     curr_f1 = f1_score(y_true, yhat_curr, average='weighted')
 
     # Save metrics JSON
+    changed = []
+    if 'alcohol' in X.columns:
+        changed.append("alcohol -1.2")
+    if 'volatile acidity' in X.columns:
+        changed.append("volatile_acidity +0.1")
+
     results = {
-        "baseline": {"accuracy": base_acc, "f1_weighted": base_f1},
-        "perturbed": {"accuracy": curr_acc, "f1_weighted": curr_f1},
-        "delta": {
-            "accuracy": curr_acc - base_acc,
-            "f1_weighted": curr_f1 - base_f1
-        }
+        "baseline_accuracy": float(base_acc),
+        "after_accuracy": float(curr_acc),
+        "accuracy_drop": float(curr_acc - base_acc),
+        "changed_features": changed,
+
+        "baseline": {"accuracy": float(base_acc), "f1_weighted": float(base_f1)},
+        "perturbed": {"accuracy": float(curr_acc), "f1_weighted": float(curr_f1)},
+        "delta": {"accuracy": float(curr_acc - base_acc), "f1_weighted": float(curr_f1 - base_f1)}
     }
-    with open(os.path.join(OUTPUT_DIR, "perturb_test_results.json"), "w") as f:
+    out_path = os.path.join(OUTPUT_DIR, "perturb_test_results.json")
+    with open(out_path, "w") as f:
         json.dump(results, f, indent=2)
+    print(f"Wrote {out_path}")
 
     print(f"Baseline:   Accuracy={base_acc:.4f}, F1_weighted={base_f1:.4f}")
     print(f"Perturbed:  Accuracy={curr_acc:.4f}, F1_weighted={curr_f1:.4f}")

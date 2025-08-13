@@ -1,8 +1,68 @@
-version: "3.9"
 services:
-  mlflow:
-    image: ghcr.io/mlflow/mlflow:latest
-    command: mlflow server --backend-store-uri /mlruns --default-artifact-root /mlruns --host 0.0.0.0 --port 5001
+  # one-off job runner for training/infer/monitor inside Docker
+  trainer:
+    build:
+      context: .
+      dockerfile: Dockerfile.serving
+    working_dir: /workspace
     volumes:
-      - ./models/mlruns:/mlruns
-    ports: ["5001:5001"]
+      - ./:/workspace
+    environment:
+      MLFLOW_TRACKING_URI: /workspace/models/mlruns
+      SERVE_HOST: model-serving
+      SERVE_PORT: "5000"
+
+  # MLflow model serving (reads latest run_id from models/h2o_model_info.json)
+  model-serving:
+    build:
+      context: .
+      dockerfile: Dockerfile.serving
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    environment:
+      MLFLOW_TRACKING_URI: /workspace/models/mlruns
+    command: |
+      bash -lc 'python - <<PY
+      import json, os, sys, glob
+      info = json.load(open("models/h2o_model_info.json"))
+      run  = info.get("run_id")
+      # 1) try artifacts/model under this run
+      cands = glob.glob(f"/workspace/models/mlruns/*/{run}/artifacts/model") if run else []
+      model_path = cands[0] if cands else None
+      # 2) fallback to local exported model
+      if not model_path:
+          mp = info.get("local_model_dir") or "models/exported_model"
+          mp = os.path.join("/workspace", mp) if not mp.startswith("/") else mp
+          if os.path.exists(mp):
+              model_path = mp
+      if not model_path:
+          print("[FATAL] No model found: neither artifacts/model nor models/exported_model present", file=sys.stderr)
+          sys.exit(2)
+      print("[INFO] Serving model from:", model_path, flush=True)
+      os.execvp("mlflow", [
+          "mlflow","models","serve",
+          "-m", model_path,
+          "--env-manager","local",
+          "--host","0.0.0.0",
+          "--port","5000"
+      ])
+      PY'
+    ports:
+      - "5001:5000"
+
+  # Streamlit UI (only required items: health check, baseline, drift, EDA)
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    environment:
+      SERVE_HOST: model-serving   # talk to model-serving via Docker DNS
+      SERVE_PORT: "5000"          # internal container port
+    ports:
+      - "8501:8501"
+    depends_on:
+      - model-serving
